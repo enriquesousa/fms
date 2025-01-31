@@ -1,16 +1,16 @@
 <?php 
 
-/*=============================================
-Capturar las rutas de la URL 
-=============================================*/
+	/*=============================================
+	Capturar las rutas de la URL 
+	=============================================*/
 
-$routesArray = explode("/",$_SERVER["REQUEST_URI"]);
-array_shift($routesArray);
+	$routesArray = explode("/",$_SERVER["REQUEST_URI"]);
+	array_shift($routesArray);
 
-foreach ($routesArray as $key => $value) {
-	
-	$routesArray[$key] = explode("?",$value)[0];
-}
+	foreach ($routesArray as $key => $value) {
+		
+		$routesArray[$key] = explode("?",$value)[0];
+	}
 
 ?>
 
