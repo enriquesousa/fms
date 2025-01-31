@@ -57,6 +57,7 @@ a:link, a:visited, a:hover, a:active{
     border-color: black !important;
 }
 
+/* Estilos lineas dash para el drag and drop */
 #dragFiles{
   line-height:100px;
   border:2px dashed #eee;
