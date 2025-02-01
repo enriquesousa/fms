@@ -62,12 +62,12 @@ foreach ($routesArray as $key => $value) {
     <!-- *********************************** -->
     <!-- JavaScripts 					    -->
     <!-- *********************************** -->
-    <script src="/views/assets/plugins/jquery/jquery.min.js" defer></script>
-    <script src="/views/assets/plugins/jquery-ui/jquery-ui.js" defer></script>
-    <script src="/views/assets/plugins/bootstrap5/bootstrap.bundle.min.js" defer></script>
-    <script src="/views/assets/plugins/sweetalert/sweetalert.min.js" defer></script>
-    <script src="/views/assets/plugins/material-preloader/material-preloader.js" defer></script>
-    <script src="/views/assets/plugins/toastr/toastr.min.js" defer></script>
+    <script src="/views/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="/views/assets/plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="/views/assets/plugins/bootstrap5/bootstrap.bundle.min.js"></script>
+    <script src="/views/assets/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="/views/assets/plugins/material-preloader/material-preloader.js"></script>
+    <script src="/views/assets/plugins/toastr/toastr.min.js"></script>
 
 </head>
 
@@ -203,15 +203,20 @@ foreach ($routesArray as $key => $value) {
 				<div class="col-12 col-lg-5 mt-3">
 			  		<div class="d-flex flex-row-reverse">
 
+						<!-- Vista Lista o Cuadricula -->
 			  			<div class="btn-group rounded">
+							<!-- Botón Cuadricula -->
 			  				<button type="button" class="btn btn-default border rounded-start text-secondary changeView" module="grid">
 			  					<i class="bi bi-grid-3x3-gap-fill"></i>
 			  				</button>
+
+							<!-- Botón Lista -->
 			  				<button type="button" class="btn btn-default border rounded-end bg-dark changeView text-white" module="list">
 			  					<i class="bi bi-list"></i>
 			  				</button>
 			  			</div>
 
+						<!-- Ordenar por -->
 			  			<select class="form-select rounded mx-2" id="sortBy">
 						  <option value="">Ordenar por</option>
 						  <option value="date_updated_file-DESC">Nuevo primero</option>
@@ -222,6 +227,7 @@ foreach ($routesArray as $key => $value) {
 						  <option value="name_file-DESC">Z-A</option>
 						</select>
 
+						<!-- Filtrar por -->
 						<select class="form-select rounded" id="filterBy">
 						  <option value="">Filtrar por</option>
 						  <option value="ALL">Todos</option>
@@ -248,7 +254,7 @@ foreach ($routesArray as $key => $value) {
 			<!--=== Tabla Listado 
 				 Listado 
 				 ======================================-->
-			<div class="table-responsive modules" id="list" style="display: none;">
+			<div class="table-responsive modules" id="list">
 				<table class="table mb-5">
 					<thead>
 						<th>Vista</th>
@@ -314,7 +320,7 @@ foreach ($routesArray as $key => $value) {
 			<!--=== Tabla Cuadriculado
 					Cuadriculado
 					======================================-->
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 my-4 px-2 modules" id="grid">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 my-4 px-2 modules" id="grid" style="display: none;">
 			 
 			 	<?php for ($i = 0; $i < 10; $i++): ?>
 			 		<div class="col">
@@ -379,6 +385,11 @@ foreach ($routesArray as $key => $value) {
 		</div>
 	</div>
 
+
+	<!--=== JS Scrips ===-->
+
+	<!-- FMS -->
+	<script src="/views/assets/js/fms/fms.js"></script>
 
 </body>
 

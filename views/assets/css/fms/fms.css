@@ -63,6 +63,7 @@ a:link, a:visited, a:hover, a:active{
   border:2px dashed #eee;
 }
 
+/* Para todos los botones de bootstrap si tiene el click puesto no muestre el outline */
 .btn:focus{
   outline:0 !important;
   box-shadow: none !important;
