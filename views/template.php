@@ -385,6 +385,12 @@ foreach ($routesArray as $key => $value) {
 		</div>
 	</div>
 
+	<!--=== Botón Subir 
+		 Botón Subir 
+		 ======================================-->
+	<a href="#top" id="up">
+		<i class="bi bi-chevron-up"></i>
+	</a>
 
 	<!--=== JS Scrips ===-->
 

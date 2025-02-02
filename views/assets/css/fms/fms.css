@@ -69,6 +69,7 @@ a:link, a:visited, a:hover, a:active{
   box-shadow: none !important;
 }
 
+/* Para el icono de subir hasta arriba de la pagina */
 #up{
   position:fixed;
   width:60px;
