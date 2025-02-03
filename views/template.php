@@ -73,9 +73,7 @@ foreach ($routesArray as $key => $value) {
 
 <body>
     
-	<!--=== TOP NAV BAR ============================================
-		TOP NAV BAR
-		======================================================-->
+	<!-- Top Navbar -->
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="top">
 	  <div class="container">
 	    <ul class="navbar-nav">
@@ -89,9 +87,7 @@ foreach ($routesArray as $key => $value) {
 	  </div>
 	</nav>
 
-	<!--=== CONTENT ============================================
-		CONTENT
-		======================================================-->
+	<!-- Contenido -->
 	<div class="container-fluid p-4 min-vh-100" id="content">
 		<div class="container bg-white border rounded">
 
@@ -385,16 +381,61 @@ foreach ($routesArray as $key => $value) {
 		</div>
 	</div>
 
-	<!--=== Botón Subir 
-		 Botón Subir 
-		 ======================================-->
+	<!-- Botón Subir -->
 	<a href="#top" id="up">
 		<i class="bi bi-chevron-up"></i>
 	</a>
 
-	<!--=== JS Scrips ===-->
 
-	<!-- FMS -->
+	<!-- Ventana Modal Login -->
+	<div class="modal" id="myLogin" data-bs-keyboard="true" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content rounded">
+
+				<form method="POST">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title"></h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body px-5 pb-4">
+
+						<h3 class="mb-3 text-center">File Manager System</h3>
+
+						<!-- form-floating para que el label quede dentro del input -->
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control rounded" id="email" name="email">
+							<label for="email">Correo Electrónico</label>
+						</div>
+
+						<div class="form-floating mb-3">
+							<input type="password" class="form-control rounded" id="pwd" name="pswd">
+							<label for="pwd">Contraseña</label>
+						</div>
+
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer d-flex justify-content-between">
+						<div>
+							<button type="button" class="btn btn-default border rounded" data-bs-dismiss="modal">Cerrar</button>
+						</div>
+						<div>
+							<button type="submit" class="btn btn-dark rounded">Iniciar sesión</button>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- JS Scrips de FMS -->
 	<script src="/views/assets/js/fms/fms.js"></script>
 
 </body>
