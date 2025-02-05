@@ -1,30 +1,29 @@
 <?php
+	/*============== Iniciar Variables de sesión ================================*/
+	ob_start();
+	session_start();
 
-/*============== Iniciar Variables de sesión ================================*/
-ob_start();
-session_start();
+	/*==============Capturar las rutas de la URL =======================================
+			Capturar las rutas de la URL 
+			No olvidar incluir el archivo .htaccess para servidores apache
+			Si usamos nginx no necesitamos este archivo.
+			Si recibimos una url como: http://fms.test/logout/exit?type=1&views=ok
+			El resultado será: Array ( [0] => logout [1] => exit [2] => type=1&views=ok )
+			Con explode("?",$value)[0] descarta los parámetros después del ?, quedandonos solo con:
+			Array ( [0] => logout [1] => exit )
+			=============================================*/
 
-/*==============Capturar las rutas de la URL =======================================
-		Capturar las rutas de la URL 
-		No olvidar incluir el archivo .htaccess para servidores apache
-		Si usamos nginx no necesitamos este archivo.
-		Si recibimos una url como: http://fms.test/logout/exit?type=1&views=ok
-		El resultado será: Array ( [0] => logout [1] => exit [2] => type=1&views=ok )
-		Con explode("?",$value)[0] descarta los parámetros después del ?, quedandonos solo con:
-		Array ( [0] => logout [1] => exit )
-		=============================================*/
+	// $routesArray = explode("/",$_SERVER["REQUEST_URI"]);
+	// array_shift($routesArray); // Elimina la primera posición del array
+	// echo '<pre>'; print_r($routesArray); echo '</pre>';
 
-// $routesArray = explode("/",$_SERVER["REQUEST_URI"]);
-// array_shift($routesArray); // Elimina la primera posición del array
-// echo '<pre>'; print_r($routesArray); echo '</pre>';
+	$routesArray = explode('/', $_SERVER['REQUEST_URI']);
+	array_shift($routesArray);
 
-$routesArray = explode('/', $_SERVER['REQUEST_URI']);
-array_shift($routesArray);
-
-foreach ($routesArray as $key => $value) {
-    $routesArray[$key] = explode('?', $value)[0]; // descarta los parámetros después del ?
-}
-// echo '<pre>'; print_r($routesArray); echo '</pre>';
+	foreach ($routesArray as $key => $value) {
+		$routesArray[$key] = explode('?', $value)[0]; // descarta los parámetros después del ?
+	}
+	// echo '<pre>'; print_r($routesArray); echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -76,328 +75,339 @@ foreach ($routesArray as $key => $value) {
 </head>
 
 <body>
-    
-	<!-- Top Navbar -->
-	<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="top">
-	  <div class="container">
-	    <ul class="navbar-nav">
-	      <li class="nav-item">
-	        <a class="nav-link active" href="/">File Manager System</a>
-	      </li>
-	    </ul>
 
-		<!-- Botón Iniciar Sesión -->
-		<?php if(!isset($_SESSION['admin'])): ?>
-			<div class="d-flex">
-				<a href="/logout" class="ms-auto px-3 text-white">Cerrar sesión</a>
-			</div>
-		<?php else: ?>
-			<div class="d-flex">
-				<a href="#myLogin" class="ms-auto px-3 text-white" data-bs-toggle="modal">Iniciar sesión</a>
-			</div>
-		<?php endif ?>
+	<?php if(!empty($routesArray[0])): ?>
+		
+		<!-- Si la ruta es logout, cerrar la sesión -->
+		<?php if($routesArray[0] == 'logout'){
+			include "pages/".$routesArray[0]."/".$routesArray[0].".php";
+		}?>
 
-	  </div>
-	</nav>
+	<?php else: ?>
 
-	<!-- Contenido -->
-	<div class="container-fluid p-4 min-vh-100" id="content">
-		<div class="container bg-white border rounded">
+		<!-- Top Navbar -->
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="top">
+		<div class="container">
+			<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link active" href="/">File Manager System</a>
+			</li>
+			</ul>
 
-			<!--=== SEARCH & BUTTONS =================
-				SEARCH & BUTTONS
-				======================================-->
-			<div class="row py-4 px-4 pb-2">
-
-				<!--=== 'BUSCADOR' 
-					 'BUSCADOR' 
-					 ======================================-->
-				<div class="col-12 col-lg-6">
-			  		<div class="input-group mt-1">
-			  			<input type="text" class="form-control rounded-start" placeholder="Busca archivos">
-			  			<button type="button" class="input-group-text rounded-end"><i class="bi bi-search"></i></button>
-			  		</div>
+			<!-- Botón Iniciar Sesión -->
+			<?php if (isset($_SESSION["admin"])): ?>
+				<div class="d-flex">
+					<a href="/logout" class="ms-auto px-3 text-white">Cerrar sesión</a>
 				</div>
-				
-				<!--=== 'BOTONES' 
-					 'BOTONES' 
-					 ======================================-->
-				<div class="col-12 col-lg-6">
-				  	<div class="d-flex flex-row-reverse">
-					  	<div class="p-1">
-						  <button type="button" class="btn btn-sm py-2 px-3 bg-info-50 font-weight-bold rounded"><i class="bi bi-arrow-up-circle pe-1"></i> Iniciar Subida</button>
-					  	</div>
-					  	<div class="p-1">
-						  <button type="button" class="btn btn-sm py-2 px-3 bg-success-50 font-weight-bold rounded"><i class="bi bi-plus-lg pe-1"></i> Agregar Archivos</button>
-						</div>
-					</div>
+			<?php else: ?>
+				<div class="d-flex">
+					<a href="#myLogin" class="ms-auto px-3 text-white" data-bs-toggle="modal">Iniciar sesión</a>
 				</div>
-
-			</div>
-
-			<!--=== Carpetas y Filtros ============================
-				 'Carpetas y Filtros' 
-				 ======================================-->
-			<div class="row pb-4 px-4 py-1">
-				
-				<!--=== Carpetas
-					 Carpetas o Servidores donde se subirán los archivos
-					 Pueden ser: Servidores, AWS S3, Google Drive, Dropbox
-					 ======================================-->
-				<div class="col-12 col-lg-7 mt-3">
-			  		<div class="row">
-
-						<!-- Servidor Local -->
-			  			<div class="col">
-			  				<div class="form-check">
-			  					<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-			  					<label class="form-check-label ps-1 align-middle">Servidor</label>
-			  				</div>
-			  			 	<div class="progress mt-1" style="height:10px">
-			  					<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:90%">90%</div>
-			  				</div>
-			  		  	</div>
-
-						<!-- AWS S3 -->
-			  		  	<div class="col">
-			  				<div class="form-check">
-			  					<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-			  					<label class="form-check-label ps-1 align-middle">AWS S3</label>
-			  				</div>
-			  				<div class="progress mt-1" style="height:10px">
-			  					<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:20%">20%</div>
-			  				</div>
-			  		  	</div>
-
-						<!-- Cloudinary -->
-			  		  	<div class="col">
-			  				<div class="form-check">
-			  					<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-			  					<label class="form-check-label ps-1 align-middle">Cloudinary</label>
-			  				</div>
-			  				<div class="progress mt-1" style="height:10px">
-			  					<div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width:60%">60%</div>
-			  				</div>
-			  		  	</div>
-
-						<!-- Vimeo -->
-			  		  	<div class="col">
-			  				<div class="form-check">
-			  					<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-			  					<label class="form-check-label ps-1 align-middle">Vimeo</label>
-			  				</div>
-			  				<div class="progress mt-1" style="height:10px">
-			  					<div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width:80%">80%</div>
-			  				</div>
-			  		  	</div>
-
-						<!-- Mailchimp -->
-			  		  	<div class="col">
-			  				<div class="form-check">
-			  					<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-			  					<label class="form-check-label ps-1 align-middle">Mailchimp</label>
-			  				</div>
-			  				<div class="progress mt-1" style="height:10px">
-			  					<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:90%">90%</div>
-			  				</div>
-			  		  	</div>
-
-			  		</div>
-			  		
-				</div>
-
-				<!--=== 'Filtros' 
-					 'Filtros' 
-					 ======================================-->
-				<div class="col-12 col-lg-5 mt-3">
-			  		<div class="d-flex flex-row-reverse">
-
-						<!-- Vista Lista o Cuadricula -->
-			  			<div class="btn-group rounded">
-							<!-- Botón Cuadricula -->
-			  				<button type="button" class="btn btn-default border rounded-start text-secondary changeView" module="grid">
-			  					<i class="bi bi-grid-3x3-gap-fill"></i>
-			  				</button>
-
-							<!-- Botón Lista -->
-			  				<button type="button" class="btn btn-default border rounded-end bg-dark changeView text-white" module="list">
-			  					<i class="bi bi-list"></i>
-			  				</button>
-			  			</div>
-
-						<!-- Ordenar por -->
-			  			<select class="form-select rounded mx-2" id="sortBy">
-						  <option value="">Ordenar por</option>
-						  <option value="date_updated_file-DESC">Nuevo primero</option>
-						  <option value="date_updated_file-ASC">Antiguo primero</option>
-						  <option value="size_file-DESC">Mas grande primero</option>
-						  <option value="size_file-ASC">Mas chico primero</option>
-						  <option value="name_file-ASC">A-Z</option>
-						  <option value="name_file-DESC">Z-A</option>
-						</select>
-
-						<!-- Filtrar por -->
-						<select class="form-select rounded" id="filterBy">
-						  <option value="">Filtrar por</option>
-						  <option value="ALL">Todos</option>
-						  <option value="images/JPG">imágenes/JPG</option>
-						  <option value="video/mp4">video/mp4</option>
-						  <option value="application/pdf">aplicación/pdf</option>
-						  <option value="application/zip">aplicación/zip</option>
-						</select>
-			  			
-			  		</div>
-				</div>
-
-			</div>
-
-			<!--=== Drag and Drop 
-				 Drag and Drop 
-				 ======================================-->
-			<div class="container mb-3">
-				<div class="jumbotron p-5 text-center rounded" id="dragFiles">
-					<h4>¡Arrastra archivos aquí!</h4>
-				</div>		
-			</div>
-
-			<!--=== Tabla Listado 
-				 Listado 
-				 ======================================-->
-			<div class="table-responsive modules" id="list">
-				<table class="table mb-5">
-					<thead>
-						<th>Vista</th>
-						<th>Nombre</th>
-						<th>Tamaño</th>
-						<th>Carpeta</th>
-						<th>Link</th>
-						<th>Modificado</th>
-						<th>Acciones</th>
-					</thead>
-					<tbody>
-						<?php for ($i = 0; $i < 10; $i++): ?>
-							<tr style="height:100px">
-
-								<!-- Vista -->
-								<td>
-									<img src="https://placehold.co/100x100" alt="" class="rounded">
-								</td>
-
-								<!-- Nombre -->
-								<td class="align-middle">
-									<div class="input-group">
-										<input type="text" class="form-control" placeholder="lorem_ipsum">
-										<span class="input-group-text">.jpg</span>
-									</div>
-								</td>
-
-								<!-- Tamaño -->
-								<td class="align-middle">
-									415.2 MB
-								</td>
-
-								<!-- Carpeta -->
-								<td class="align-middle">
-									<span class="badge bg-dark rounded px-3 py-2 text-white">AWS S3</span>
-								</td>
-
-								<!-- Link -->
-								<td class="align-middle">
-									http://file-manager-system.com/lorem_i...
-									<i class="bi bi-box-arrow-up-right ps-2 btn"></i>
-								</td>
-
-								<!-- Modificado -->
-								<td class="align-middle">
-									2024-07-05, 12:07:00
-								</td>
-
-								<!-- Acciones -->
-								<td class="align-middle">
-								  	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16" style="cursor:pointer">
-									  <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
-									</svg>
-								  <i class="bi bi-trash ps-2 btn"></i>
-								</td>
-
-							</tr>
-						<?php endfor ?>
-					</tbody>
-				</table>
-			</div>
-
-			<!--=== Tabla Cuadriculado
-					Cuadriculado
-					======================================-->
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 my-4 px-2 modules" id="grid" style="display: none;">
-			 
-			 	<?php for ($i = 0; $i < 10; $i++): ?>
-			 		<div class="col">
-
-			 			<!-- Card -->
-			 			<div class="card rounded p-3 border-0 shadow my-3">
-
-			 				<!-- Card Header -->
-			 				<div class="card-header bg-white border-0 p-0">
-			 					<div class="d-flex justify-content-between mb-2">
-			 						<!-- Upload Button -->
-			 						<div class="bg-white">
-										<i class="bi bi-box-arrow-up-right ps-2 btn p-0"></i>
-									</div>
-									<!-- Copy Button and Trash -->
-									<div class="bg-white m-0">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16" style="cursor:pointer">
-											<path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
-										</svg>
-										<i class="bi bi-trash p-0 ps-2 btn"></i>
-									</div>
-			 					</div>
-			 				</div>
-
-			 				<img src="https://placehold.co/100x100" class="card-img-top rounded">
-
-			 				<!-- Card Body -->
-			 				<div class="card-body p-1">
-			 					<p class="card-text">
-			 				
-									<!-- File Name -->
-			 						<div class="input-group">
-										<input type="text" class="form-control" placeholder="lorem_ipsum">
-										<span class="input-group-text">.jpg</span>
-									</div>
-
-									<!-- File Size and Server -->
-									<div class="d-flex justify-content-between mt-3">
-										<div class="bg-white">
-											<p class="small mt-1">415.2 MB</p>
-										</div>
-										<div class="bg-white m-0">
-											<span class="badge bg-dark border rounded px-3 py-2 text-white">Mailchimp</span>
-										</div>
-									</div>
-
-									<!-- Date -->
-									<h6 class="float-end my-0 py-0">
-										<small>2024-07-05, 12:07:00</small>
-									</h6>
-
-			 					</p>
-			 				</div>
-
-			 			</div>
-
-			 		</div>
-			 	<?php endfor ?>
-
-			</div>
+			<?php endif ?>
 
 		</div>
-	</div>
+		</nav>
 
-	<!-- Botón Subir -->
-	<a href="#top" id="up">
-		<i class="bi bi-chevron-up"></i>
-	</a>
+		<!-- Contenido -->
+		<div class="container-fluid p-4 min-vh-100" id="content">
+			<div class="container bg-white border rounded">
+
+				<!--=== SEARCH & BUTTONS =================
+					SEARCH & BUTTONS
+					======================================-->
+				<div class="row py-4 px-4 pb-2">
+
+					<!--=== 'BUSCADOR' 
+						'BUSCADOR' 
+						======================================-->
+					<div class="col-12 col-lg-6">
+						<div class="input-group mt-1">
+							<input type="text" class="form-control rounded-start" placeholder="Busca archivos">
+							<button type="button" class="input-group-text rounded-end"><i class="bi bi-search"></i></button>
+						</div>
+					</div>
+					
+					<!--=== 'BOTONES' 
+						'BOTONES' 
+						======================================-->
+					<div class="col-12 col-lg-6">
+						<div class="d-flex flex-row-reverse">
+							<div class="p-1">
+							<button type="button" class="btn btn-sm py-2 px-3 bg-info-50 font-weight-bold rounded"><i class="bi bi-arrow-up-circle pe-1"></i> Iniciar Subida</button>
+							</div>
+							<div class="p-1">
+							<button type="button" class="btn btn-sm py-2 px-3 bg-success-50 font-weight-bold rounded"><i class="bi bi-plus-lg pe-1"></i> Agregar Archivos</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!--=== Carpetas y Filtros ============================
+					'Carpetas y Filtros' 
+					======================================-->
+				<div class="row pb-4 px-4 py-1">
+					
+					<!--=== Carpetas
+						Carpetas o Servidores donde se subirán los archivos
+						Pueden ser: Servidores, AWS S3, Google Drive, Dropbox
+						======================================-->
+					<div class="col-12 col-lg-7 mt-3">
+						<div class="row">
+
+							<!-- Servidor Local -->
+							<div class="col">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+									<label class="form-check-label ps-1 align-middle">Servidor</label>
+								</div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:90%">90%</div>
+								</div>
+							</div>
+
+							<!-- AWS S3 -->
+							<div class="col">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+									<label class="form-check-label ps-1 align-middle">AWS S3</label>
+								</div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:20%">20%</div>
+								</div>
+							</div>
+
+							<!-- Cloudinary -->
+							<div class="col">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+									<label class="form-check-label ps-1 align-middle">Cloudinary</label>
+								</div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width:60%">60%</div>
+								</div>
+							</div>
+
+							<!-- Vimeo -->
+							<div class="col">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+									<label class="form-check-label ps-1 align-middle">Vimeo</label>
+								</div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width:80%">80%</div>
+								</div>
+							</div>
+
+							<!-- Mailchimp -->
+							<div class="col">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+									<label class="form-check-label ps-1 align-middle">Mailchimp</label>
+								</div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:90%">90%</div>
+								</div>
+							</div>
+
+						</div>
+						
+					</div>
+
+					<!--=== 'Filtros' 
+						'Filtros' 
+						======================================-->
+					<div class="col-12 col-lg-5 mt-3">
+						<div class="d-flex flex-row-reverse">
+
+							<!-- Vista Lista o Cuadricula -->
+							<div class="btn-group rounded">
+								<!-- Botón Cuadricula -->
+								<button type="button" class="btn btn-default border rounded-start text-secondary changeView" module="grid">
+									<i class="bi bi-grid-3x3-gap-fill"></i>
+								</button>
+
+								<!-- Botón Lista -->
+								<button type="button" class="btn btn-default border rounded-end bg-dark changeView text-white" module="list">
+									<i class="bi bi-list"></i>
+								</button>
+							</div>
+
+							<!-- Ordenar por -->
+							<select class="form-select rounded mx-2" id="sortBy">
+							<option value="">Ordenar por</option>
+							<option value="date_updated_file-DESC">Nuevo primero</option>
+							<option value="date_updated_file-ASC">Antiguo primero</option>
+							<option value="size_file-DESC">Mas grande primero</option>
+							<option value="size_file-ASC">Mas chico primero</option>
+							<option value="name_file-ASC">A-Z</option>
+							<option value="name_file-DESC">Z-A</option>
+							</select>
+
+							<!-- Filtrar por -->
+							<select class="form-select rounded" id="filterBy">
+							<option value="">Filtrar por</option>
+							<option value="ALL">Todos</option>
+							<option value="images/JPG">imágenes/JPG</option>
+							<option value="video/mp4">video/mp4</option>
+							<option value="application/pdf">aplicación/pdf</option>
+							<option value="application/zip">aplicación/zip</option>
+							</select>
+							
+						</div>
+					</div>
+
+				</div>
+
+				<!--=== Drag and Drop 
+					Drag and Drop 
+					======================================-->
+				<div class="container mb-3">
+					<div class="jumbotron p-5 text-center rounded" id="dragFiles">
+						<h4>¡Arrastra archivos aquí!</h4>
+					</div>		
+				</div>
+
+				<!--=== Tabla Listado 
+					Listado 
+					======================================-->
+				<div class="table-responsive modules" id="list">
+					<table class="table mb-5">
+						<thead>
+							<th>Vista</th>
+							<th>Nombre</th>
+							<th>Tamaño</th>
+							<th>Carpeta</th>
+							<th>Link</th>
+							<th>Modificado</th>
+							<th>Acciones</th>
+						</thead>
+						<tbody>
+							<?php for ($i = 0; $i < 10; $i++): ?>
+								<tr style="height:100px">
+
+									<!-- Vista -->
+									<td>
+										<img src="https://placehold.co/100x100" alt="" class="rounded">
+									</td>
+
+									<!-- Nombre -->
+									<td class="align-middle">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="lorem_ipsum">
+											<span class="input-group-text">.jpg</span>
+										</div>
+									</td>
+
+									<!-- Tamaño -->
+									<td class="align-middle">
+										415.2 MB
+									</td>
+
+									<!-- Carpeta -->
+									<td class="align-middle">
+										<span class="badge bg-dark rounded px-3 py-2 text-white">AWS S3</span>
+									</td>
+
+									<!-- Link -->
+									<td class="align-middle">
+										http://file-manager-system.com/lorem_i...
+										<i class="bi bi-box-arrow-up-right ps-2 btn"></i>
+									</td>
+
+									<!-- Modificado -->
+									<td class="align-middle">
+										2024-07-05, 12:07:00
+									</td>
+
+									<!-- Acciones -->
+									<td class="align-middle">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16" style="cursor:pointer">
+										<path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+										</svg>
+									<i class="bi bi-trash ps-2 btn"></i>
+									</td>
+
+								</tr>
+							<?php endfor ?>
+						</tbody>
+					</table>
+				</div>
+
+				<!--=== Tabla Cuadriculado
+						Cuadriculado
+						======================================-->
+				<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 my-4 px-2 modules" id="grid" style="display: none;">
+				
+					<?php for ($i = 0; $i < 10; $i++): ?>
+						<div class="col">
+
+							<!-- Card -->
+							<div class="card rounded p-3 border-0 shadow my-3">
+
+								<!-- Card Header -->
+								<div class="card-header bg-white border-0 p-0">
+									<div class="d-flex justify-content-between mb-2">
+										<!-- Upload Button -->
+										<div class="bg-white">
+											<i class="bi bi-box-arrow-up-right ps-2 btn p-0"></i>
+										</div>
+										<!-- Copy Button and Trash -->
+										<div class="bg-white m-0">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16" style="cursor:pointer">
+												<path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+											</svg>
+											<i class="bi bi-trash p-0 ps-2 btn"></i>
+										</div>
+									</div>
+								</div>
+
+								<img src="https://placehold.co/100x100" class="card-img-top rounded">
+
+								<!-- Card Body -->
+								<div class="card-body p-1">
+									<p class="card-text">
+								
+										<!-- File Name -->
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="lorem_ipsum">
+											<span class="input-group-text">.jpg</span>
+										</div>
+
+										<!-- File Size and Server -->
+										<div class="d-flex justify-content-between mt-3">
+											<div class="bg-white">
+												<p class="small mt-1">415.2 MB</p>
+											</div>
+											<div class="bg-white m-0">
+												<span class="badge bg-dark border rounded px-3 py-2 text-white">Mailchimp</span>
+											</div>
+										</div>
+
+										<!-- Date -->
+										<h6 class="float-end my-0 py-0">
+											<small>2024-07-05, 12:07:00</small>
+										</h6>
+
+									</p>
+								</div>
+
+							</div>
+
+						</div>
+					<?php endfor ?>
+
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Botón Subir -->
+		<a href="#top" id="up">
+			<i class="bi bi-chevron-up"></i>
+		</a>
+		
+	<?php endif ?>
 
 
 	<!-- Ventana Modal Login -->
@@ -454,7 +464,6 @@ foreach ($routesArray as $key => $value) {
 			</div>
 		</div>
 	</div>
-
 
 	<!-- JS Scrips de FMS -->
 	<script src="/views/assets/js/fms/fms.js"></script>
