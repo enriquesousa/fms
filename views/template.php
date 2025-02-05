@@ -1,5 +1,9 @@
 <?php
 
+/*============== Iniciar Variables de sesión ================================*/
+ob_start();
+session_start();
+
 /*==============Capturar las rutas de la URL =======================================
 		Capturar las rutas de la URL 
 		No olvidar incluir el archivo .htaccess para servidores apache
@@ -81,9 +85,18 @@ foreach ($routesArray as $key => $value) {
 	        <a class="nav-link active" href="/">File Manager System</a>
 	      </li>
 	    </ul>
-	    <div class="d-flex">
-	    	<a href="#myLogin" class="ms-auto px-3 text-white" data-bs-toggle="modal">Iniciar sesión</a>
-	    </div>
+
+		<!-- Botón Iniciar Sesión -->
+		<?php if(!isset($_SESSION['admin'])): ?>
+			<div class="d-flex">
+				<a href="/logout" class="ms-auto px-3 text-white">Cerrar sesión</a>
+			</div>
+		<?php else: ?>
+			<div class="d-flex">
+				<a href="#myLogin" class="ms-auto px-3 text-white" data-bs-toggle="modal">Iniciar sesión</a>
+			</div>
+		<?php endif ?>
+
 	  </div>
 	</nav>
 
