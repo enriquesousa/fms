@@ -10,7 +10,12 @@ class AdminsController{
 
 		if(isset($_POST["email_admin"]) && isset($_POST["password_admin"])){
 
-            // echo "Hola soy el login";
+			echo '<script>
+					fncMatPreloader("on");
+					fncSweetAlert("loading", "Cargando...", "");
+				</script>';
+			// return;
+
 
             $url = "admins?login=true&suffix=admin";
             $method = "POST";
@@ -19,16 +24,8 @@ class AdminsController{
 				"password_admin" => $_POST["password_admin"]
 			);
 
-
             $login = CurlController::request($url,$method,$fields);
-
             // echo '<pre>'; print_r($login); echo '</pre>'; // Nos entrega un objeto con el status y el resultado
-
-			// echo '<script>
-			// fncMatPreloader("on");
-			// fncSweetAlert("loading", "loading...", "");
-			// </script>';
-
 			
 			if($login->status == 200){
 				$_SESSION["admin"] = $login->results[0]; // Guardamos la variable de sesión
@@ -38,11 +35,24 @@ class AdminsController{
 					</script>';
 			
 			}else{
-				// echo '<script>
-				// 	fncFormatInputs();
-				// 	fncMatPreloader("off");
-				// 	fncToastr("error", "'.$login->results.'");
-				// </script>';
+
+				if($login->results == "Wrong password"){
+					$error = "Contraseña incorrecta";
+				}
+				elseif($login->results == "Wrong email"){
+					$error = "Email incorrecto";
+				}
+				else{
+					$error = "Email o contraseña incorrectos";
+				}
+				
+				
+				// fncToastr("error", "'.$login->results.'");
+				echo '<script>
+					fncFormatInputs();
+					fncMatPreloader("off");
+					fncToastr("error", "'.$error.'");
+				</script>';
 			}
 
 		}
