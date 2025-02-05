@@ -405,18 +405,26 @@ foreach ($routesArray as $key => $value) {
 
 						<h3 class="mb-3 text-center">File Manager System</h3>
 
+						<!-- email -->
 						<!-- form-floating para que el label quede dentro del input -->
 						<div class="form-floating mb-3">
-							<input type="text" class="form-control rounded" id="email" name="email">
+							<input type="text" class="form-control rounded" id="email" name="email_admin" required>
 							<label for="email">Correo Electrónico</label>
 						</div>
 
+						<!-- password -->
 						<div class="form-floating mb-3">
-							<input type="password" class="form-control rounded" id="pwd" name="pswd">
+							<input type="password" class="form-control rounded" id="pwd" name="password_admin" required>
 							<label for="pwd">Contraseña</label>
 						</div>
 
 					</div>
+
+					<?php
+						require_once 'controllers/admins.controller.php';
+						$login = new AdminsController();
+						$login->login(); // Ejecutar la función
+					?>
 
 					<!-- Modal footer -->
 					<div class="modal-footer d-flex justify-content-between">
