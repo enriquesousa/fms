@@ -30,7 +30,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FMS | File Manager System</title>
@@ -76,7 +75,6 @@
     <script src="/views/assets/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="/views/assets/plugins/material-preloader/material-preloader.js"></script>
     <script src="/views/assets/plugins/toastr/toastr.min.js"></script>
-
 </head>
 
 <body>
