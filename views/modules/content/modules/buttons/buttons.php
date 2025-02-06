@@ -16,7 +16,7 @@
                     id="customFile"
                     accept="image/*,video/*,audio/*,.pdf,.zip"
                     multiple    
-                    onchange="uploadFiles(event)"
+                    onchange="uploadFiles(event, 'btn', '<?php echo date("Y-m-d, H:i:s"); ?>')"
                 >
                 <label class="btn btn-sm py-2 px-3 bg-success-50 font-weight-bold rounded" for="customFile">
                     <i class="bi bi-plus-lg pe-1"></i> Agregar Archivos

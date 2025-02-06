@@ -42,11 +42,57 @@ $(document).on("click", ".changeView", function () {
 });
 
 // *******************************
+// Zona Drag and Drop
+// *******************************
+$("#dragFiles").on('dragover', function (e) {
+	e.preventDefault();
+	e.stopPropagation(); // para cuando estemos pasando el archivo sobre la zona se active el dragover
+	$(this).addClass("bg-light");
+});
+
+$("#dragFiles").on('dragenter', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+
+$("#dragFiles").on('mouseleave', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	$(this).removeClass("bg-light");
+});
+
+$("#dragFiles").on('drop', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+
+	if(e.originalEvent.dataTransfer){
+		if(e.originalEvent.dataTransfer.files.length){
+			$(this).removeClass("bg-light");
+
+			var t = new Date();
+			var time = t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2)+", "+t.toLocaleTimeString();
+
+			uploadFiles(e.originalEvent.dataTransfer.files, 'drag', time);
+		}
+	}
+
+});
+
+// *******************************
 // Subir Archivos
 // *******************************
 var files;
-function uploadFiles(event) {
+function uploadFiles(event, type, time) {
+
 	// console.log("event", event);
-	files = event.target.files;
+	// return;
+
+	if(type == 'btn'){
+		files = event.target.files;
+	}else{
+		files = event;
+	}
+
 	console.log("files", files);
+	console.log("time", time);
 }

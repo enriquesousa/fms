@@ -3,6 +3,9 @@
 	ob_start();
 	session_start();
 
+	/*============== Zona Horaria ================================*/
+	date_default_timezone_set('America/Tijuana'); 
+
 	/*==============Capturar las rutas de la URL =======================================
 			Capturar las rutas de la URL 
 			No olvidar incluir el archivo .htaccess para servidores apache
