@@ -52,7 +52,7 @@ $(document).on("click", ".changeView", function () {
 $("#dragFiles").on('dragover', function (e) {
 	e.preventDefault();
 	e.stopPropagation(); // para cuando estemos pasando el archivo sobre la zona se active el dragover
-	$(this).addClass("bg-light");
+	$(this).addClass("bg-info-50");
 });
 
 $("#dragFiles").on('dragenter', function (e) {
@@ -63,7 +63,7 @@ $("#dragFiles").on('dragenter', function (e) {
 $("#dragFiles").on('mouseleave', function (e) {
 	e.preventDefault();
 	e.stopPropagation();
-	$(this).removeClass("bg-light");
+	$(this).removeClass("bg-info-50");
 });
 
 $("#dragFiles").on('drop', function (e) {
@@ -119,7 +119,7 @@ function uploadFiles(event, type, time) {
 		// console.log("size:", size);
 
 
-		/* Captura la miniatura si el archivo es una imagen */
+		/* Captura la miniatura si el archivo es una Imagen */
 		var path;
 		if(file.type.split('/')[0] == "image"){
 
@@ -136,7 +136,7 @@ function uploadFiles(event, type, time) {
 
 		}
 
-		/* Captura la miniatura si el archivo es un video */
+		/* Captura la miniatura si el archivo es un Video */
 		if(file.type.split('/')[0] == "video"){
 
 			// Si es un video mp4
@@ -172,6 +172,25 @@ function uploadFiles(event, type, time) {
 			}
 
 		}
+
+		/* Captura la miniatura si el archivo es un Audio */
+		if(file.type.split('/')[0] == "audio"){
+			path = "/views/assets/img/multimedia.png";
+			paintFiles(path,name,extension,size,time);
+		}
+
+		/* Captura la miniatura si el archivo es un PDF */
+		if(file.type.split('/')[1] == "pdf"){
+			path = "/views/assets/img/pdf.jpeg";
+			paintFiles(path,name,extension,size,time);
+		}
+
+		/* Captura la miniatura si el archivo es un ZIP */
+		if(file.type.split('/')[1] == "zip"){
+			path = "/views/assets/img/zip.jpeg";
+			paintFiles(path,name,extension,size,time);
+		}
+
 
 		/* Para pintar en el DOM lo vamos a pintar después de haber capturado las miniaturas */
 		function paintFiles(path, name, extension, size, time){
