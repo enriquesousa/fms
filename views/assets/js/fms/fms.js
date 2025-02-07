@@ -38,7 +38,12 @@ $(document).on("click", ".changeView", function () {
 	// Fondo: Le cambiamos el color al que se le dio click
 	$(this).addClass("bg-dark")
 	$(this).removeClass("bg-white")
-	
+
+	/* Ajustar imágenes cuando activamos el grid */
+	if($(this).attr("module") == "grid"){
+		imgAdjustGrid();
+	}
+
 });
 
 // *******************************
@@ -97,145 +102,160 @@ function uploadFiles(event, type, time) {
 	// Recorriendo los archivos
 	Array.from(files).forEach((file, index) => {
 
-		// console.log("file", file);
+		/* console.log("file", file); */
 
-		// ------------------
-		// Capturar el nombre
-		// ------------------
+		/* Capturar el nombre */
 		var name = file.name.split('.'); // separamos en un array donde nos separa el .
 		name.pop(); // el ultimo elemento del array lo eliminamos porque este va a ser la extension
 		name = name.toString().replace(/,/g, '_'); // y si hay un nombre de archivo que tenia un . el split lo convierte en , y aquí lo convertimos en _
 		// console.log("name:", name);
 
-		// ---------------------
-		// Capturar la extension
-		// ---------------------
+		/* Capturar la extension */
 		var extension = file.name.split('.').pop();
 		// console.log("extension:", extension);
 
-		// ---------------------
-		// Capturar tamaño en MB
-		// ---------------------
+		/* Capturar tamaño en MB */
 		var size = (Number(file.size)/1000000).toFixed(2);
 		// console.log("size:", size);
 
 
-		// ---------------------------------------------------
-		// Visualizar los archivos a subir en la tabla - lista
-		// ---------------------------------------------------
-		$("#list table tbody tr:first-child").before(` 
-			
-			<tr style="height:100px">
+		/* Captura la miniatura en imágenes */
+		var path;
+		if(file.type.split('/')[0] == "image"){
 
-				<!-- Vista -->
-				<td>
-					<img src="https://placehold.co/100x100" alt="" class="rounded">
-				</td>
+			var data = new FileReader();
+			data.readAsDataURL(file);
 
-				<!-- Nombre -->
-				<td class="align-middle">
-					<div class="input-group">
-						<input type="text" class="form-control" value="${name}">
-						<span class="input-group-text">.${extension}</span>
-					</div>
-				</td>
+			$(data).on('load', function(event) {
+				// console.log("event", event);
+				path = event.target.result;
 
-				<!-- Tamaño -->
-				<td class="align-middle">
-					${size} MB
-				</td>
+				// Pintar en el DOM solo cuando se haya capturado la miniatura
+				paintFiles(path, name, extension, size, time);
+			})
 
-				<!-- Carpeta -->
-				<td class="align-middle">
-					<span class="badge bg-dark rounded px-3 py-2 text-white">Servidor</span>
-				</td>
+		}
 
-				<!-- Progress bar -->
-				<td class="align-middle">
-					<div class="progress-spinner"></div>
-					<div class="progress mt-1" style="height:10px">
-						<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
-					</div>
-				</td>
+		/* Para pintar en el DOM lo vamos a pintar después de haber capturado las miniaturas */
+		function paintFiles(path, name, extension, size, time){
 
-				<!-- Fecha Modificado -->
-				<td class="align-middle">
-					${time}
-				</td>
-
-				<!-- Acciones -->
-				<td class="align-middle">
-					<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
-						<i class="bi bi-x-circle"></i> Eliminar
-					</button>
-				</td>
-
-			</tr>
-			
-		`);
-
-		// ---------------------------------------------------
-		// Visualizar los archivos a subir en la tabla - Grid
-		// ---------------------------------------------------
-		$("#grid .col:first-child").before(`
-
-			<div class="col">
-				<div class="card rounded p-3 border-0 shadow my-3">
+			/* Visualizar los archivos a subir en la tabla - lista */
+			$("#list table tbody tr:first-child").before(` 
+				
+				<tr style="height:100px">
 	
-					<!-- Card Header -->
-					<div class="card-header bg-white border-0 p-0">
-						<div class="d-flex justify-content-between mb-2">
-							<!-- Barra de progreso -->
-							<div class="bg-white w-50">
-								<div class="progress-spinner"></div>
-								<div class="progress mt-1" style="height:10px">
-									<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
-								</div>
-							</div>
-							<!-- Button Eliminar -->
-							<div class="bg-white m-0">
-								<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
-									<i class="bi bi-x-circle"></i> Clear
-								</button>
-							</div>
-						</div>
-					</div>
+					<!-- Vista -->
+					<td>
+						<img src="${path}" class="rounded" style="height:100px; width:100px; object-fit:cover; object-position:center">
+					</td>
 	
-					<img src="https://placehold.co/100x100" class="card-img-top rounded">
-	
-					<!-- Card Body -->
-					<div class="card-body p-1">
-						<p class="card-text">
-	
-							<!-- File Name -->
+					<!-- Nombre -->
+					<td class="align-middle">
 						<div class="input-group">
 							<input type="text" class="form-control" value="${name}">
 							<span class="input-group-text">.${extension}</span>
 						</div>
+					</td>
 	
-						<!-- File Size and Server -->
-						<div class="d-flex justify-content-between mt-3">
-							<div class="bg-white">
-								<p class="small mt-1">${size} MB</p>
-							</div>
-							<div class="bg-white m-0">
-								<span class="badge bg-dark border rounded px-3 py-2 text-white">Servidor</span>
+					<!-- Tamaño -->
+					<td class="align-middle">
+						${size} MB
+					</td>
+	
+					<!-- Carpeta -->
+					<td class="align-middle">
+						<span class="badge bg-dark rounded px-3 py-2 text-white">Servidor</span>
+					</td>
+	
+					<!-- Progress bar -->
+					<td class="align-middle">
+						<div class="progress-spinner"></div>
+						<div class="progress mt-1" style="height:10px">
+							<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
+						</div>
+					</td>
+	
+					<!-- Fecha Modificado -->
+					<td class="align-middle">
+						${time}
+					</td>
+	
+					<!-- Acciones -->
+					<td class="align-middle">
+						<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
+							<i class="bi bi-x-circle"></i> Eliminar
+						</button>
+					</td>
+	
+				</tr>
+				
+			`);
+	
+			/* Visualizar los archivos a subir en la tabla - Grid */
+			$("#grid .col:first-child").before(`
+	
+				<div class="col">
+					<div class="card rounded p-3 border-0 shadow my-3">
+		
+						<!-- Card Header -->
+						<div class="card-header bg-white border-0 p-0">
+							<div class="d-flex justify-content-between mb-2">
+								<!-- Barra de progreso -->
+								<div class="bg-white w-50">
+									<div class="progress-spinner"></div>
+									<div class="progress mt-1" style="height:10px">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
+									</div>
+								</div>
+								<!-- Button Eliminar -->
+								<div class="bg-white m-0">
+									<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
+										<i class="bi bi-x-circle"></i> Clear
+									</button>
+								</div>
 							</div>
 						</div>
-	
-						<!-- Date -->
-						<h6 class="float-end my-0 py-0">
-							<small>${time}</small>
-						</h6>
-	
-						</p>
+		
+						<img src="${path}" class="card-img-top rounded w-100">
+		
+						<!-- Card Body -->
+						<div class="card-body p-1">
+							<p class="card-text">
+		
+								<!-- File Name -->
+							<div class="input-group">
+								<input type="text" class="form-control" value="${name}">
+								<span class="input-group-text">.${extension}</span>
+							</div>
+		
+							<!-- File Size and Server -->
+							<div class="d-flex justify-content-between mt-3">
+								<div class="bg-white">
+									<p class="small mt-1">${size} MB</p>
+								</div>
+								<div class="bg-white m-0">
+									<span class="badge bg-dark border rounded px-3 py-2 text-white">Servidor</span>
+								</div>
+							</div>
+		
+							<!-- Date -->
+							<h6 class="float-end my-0 py-0">
+								<small>${time}</small>
+							</h6>
+		
+							</p>
+						</div>
+		
 					</div>
-	
 				</div>
-			</div>
+	
+			`);
 
-		`);
+			/* Ejecutar función ajuste de imagen */
+			imgAdjustGrid();
 
+		}
+		
 
 	});
 
@@ -243,3 +263,25 @@ function uploadFiles(event, type, time) {
 	// console.log("time", time);
 	
 }
+
+/*=============================================
+Ajuste de imagen para el grid
+=============================================*/
+function imgAdjustGrid(){
+
+	if($(".card-img-top").length > 0){
+
+		var cardImgTop = $(".card-img-top");
+
+		cardImgTop.each((i)=>{
+
+			$(cardImgTop[i]).attr("style", "height:"+$(cardImgTop[i]).width()+"px;  object-fit: cover; object-position: center;");		
+			
+		})
+	}
+
+}
+
+
+
+
