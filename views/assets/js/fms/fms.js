@@ -87,12 +87,94 @@ function uploadFiles(event, type, time) {
 	// console.log("event", event);
 	// return;
 
+	// Captura de los archivos
 	if(type == 'btn'){
 		files = event.target.files;
 	}else{
 		files = event;
 	}
 
-	console.log("files", files);
-	console.log("time", time);
+	// Recorriendo los archivos
+	Array.from(files).forEach((file, index) => {
+		// console.log("file", file);
+
+		// ------------------
+		// Capturar el nombre
+		// ------------------
+		var name = file.name.split('.'); // separamos en un array donde nos separa el .
+		name.pop(); // el ultimo elemento del array lo eliminamos porque este va a ser la extension
+		name = name.toString().replace(/,/g, '_'); // y si hay un nombre de archivo que tenia un . el split lo convierte en , y aquí lo convertimos en _
+		// console.log("name:", name);
+
+		// ---------------------
+		// Capturar la extension
+		// ---------------------
+		var extension = file.name.split('.').pop();
+		// console.log("extension:", extension);
+
+		// ---------------------
+		// Capturar tamaño en MB
+		// ---------------------
+		var size = (Number(file.size)/1000000).toFixed(2);
+		// console.log("size:", size);
+
+
+		// -------------------------
+		// Pintar el maquetado lista
+		// -------------------------
+		$("#list table tbody tr:first-child").before(` 
+			
+			<tr style="height:100px">
+
+				<!-- Vista -->
+				<td>
+					<img src="https://placehold.co/100x100" alt="" class="rounded">
+				</td>
+
+				<!-- Nombre -->
+				<td class="align-middle">
+					<div class="input-group">
+						<input type="text" class="form-control" value="${name}">
+						<span class="input-group-text">.${extension}</span>
+					</div>
+				</td>
+
+				<!-- Tamaño -->
+				<td class="align-middle">
+					${size} MB
+				</td>
+
+				<!-- Carpeta -->
+				<td class="align-middle">
+					<span class="badge bg-dark rounded px-3 py-2 text-white">Servidor</span>
+				</td>
+
+				<!-- Progress bar -->
+				<td class="align-middle">
+					<div class="progress-spinner"></div>
+					<div class="progress mt-1" style="height:10px">
+						<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
+					</div>
+				</td>
+
+				<!-- Fecha Modificado -->
+				<td class="align-middle">
+					${time}
+				</td>
+
+				<!-- Acciones -->
+				<td class="align-middle">
+					<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
+						<i class="bi bi-x-circle"></i> Eliminar
+					</button>
+				</td>
+
+			</tr>
+			
+		`);
+
+	});
+
+	// console.log("files", files);
+	// console.log("time", time);
 }
