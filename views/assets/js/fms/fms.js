@@ -1,6 +1,6 @@
-// *******************************
-// Cambiar de Listado a Cuadricula
-// *******************************
+/* ------------------------------- */
+/* Cambiar de Listado a Cuadricula */
+/* ------------------------------- */
 $(document).on("click", ".changeView", function () {
 
 	// var module = $(this).attr("module");
@@ -46,9 +46,9 @@ $(document).on("click", ".changeView", function () {
 
 });
 
-// *******************************
-// Zona Drag and Drop
-// *******************************
+/* ------------------ */
+/* Zona Drag and Drop */
+/* ------------------ */
 $("#dragFiles").on('dragover', function (e) {
 	e.preventDefault();
 	e.stopPropagation(); // para cuando estemos pasando el archivo sobre la zona se active el dragover
@@ -83,9 +83,9 @@ $("#dragFiles").on('drop', function (e) {
 
 });
 
-// *******************************
-// Subir Archivos
-// *******************************
+/* -------------- */
+/* Subir Archivos */
+/* -------------- */
 var files;
 function uploadFiles(event, type, time) {
 
@@ -119,7 +119,7 @@ function uploadFiles(event, type, time) {
 		// console.log("size:", size);
 
 
-		/* Captura la miniatura en imágenes */
+		/* Captura la miniatura si el archivo es una imagen */
 		var path;
 		if(file.type.split('/')[0] == "image"){
 
@@ -133,6 +133,43 @@ function uploadFiles(event, type, time) {
 				// Pintar en el DOM solo cuando se haya capturado la miniatura
 				paintFiles(path, name, extension, size, time);
 			})
+
+		}
+
+		/* Captura la miniatura si el archivo es un video */
+		if(file.type.split('/')[0] == "video"){
+
+			// Si es un video mp4
+			if(file.type.split('/')[1] == "mp4"){
+
+				// Para poder sacar la miniatura del video, convertir elemento en canvas
+				var canvas = document.createElement("canvas");
+				var video = document.createElement("video");
+
+				video.autoplay = true;
+				video.muted = true;
+				video.src = URL.createObjectURL(file);
+
+				video.onloadeddata = () => {
+
+					var ctx = canvas.getContext("2d");
+
+					canvas.width = video.videoWidth;
+					canvas.height = video.videoHeight;
+
+					ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+					video.pause();
+
+					path = canvas.toDataURL("image/png");
+
+					// Pintar en el DOM solo cuando se haya capturado la miniatura de video mp4
+					paintFiles(path,name,extension,size,time);
+				}
+			}else{
+				// Si NO es un video mp4
+				path = "/views/assets/img/multimedia.png";
+				paintFiles(path,name,extension,size,time);
+			}
 
 		}
 
@@ -264,9 +301,10 @@ function uploadFiles(event, type, time) {
 	
 }
 
-/*=============================================
-Ajuste de imagen para el grid
-=============================================*/
+
+/* ----------------------------- */
+/* Ajuste de imagen para el grid */
+/* ----------------------------- */
 function imgAdjustGrid(){
 
 	if($(".card-img-top").length > 0){
