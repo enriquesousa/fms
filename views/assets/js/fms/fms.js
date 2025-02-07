@@ -96,6 +96,7 @@ function uploadFiles(event, type, time) {
 
 	// Recorriendo los archivos
 	Array.from(files).forEach((file, index) => {
+
 		// console.log("file", file);
 
 		// ------------------
@@ -119,9 +120,9 @@ function uploadFiles(event, type, time) {
 		// console.log("size:", size);
 
 
-		// -------------------------
-		// Pintar el maquetado lista
-		// -------------------------
+		// ---------------------------------------------------
+		// Visualizar los archivos a subir en la tabla - lista
+		// ---------------------------------------------------
 		$("#list table tbody tr:first-child").before(` 
 			
 			<tr style="height:100px">
@@ -173,8 +174,72 @@ function uploadFiles(event, type, time) {
 			
 		`);
 
+		// ---------------------------------------------------
+		// Visualizar los archivos a subir en la tabla - Grid
+		// ---------------------------------------------------
+		$("#grid .col:first-child").before(`
+
+			<div class="col">
+				<div class="card rounded p-3 border-0 shadow my-3">
+	
+					<!-- Card Header -->
+					<div class="card-header bg-white border-0 p-0">
+						<div class="d-flex justify-content-between mb-2">
+							<!-- Barra de progreso -->
+							<div class="bg-white w-50">
+								<div class="progress-spinner"></div>
+								<div class="progress mt-1" style="height:10px">
+									<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%">0%</div>
+								</div>
+							</div>
+							<!-- Button Eliminar -->
+							<div class="bg-white m-0">
+								<button type="button" class="btn btn-sm py-2 px-3 bg-default border font-weight-bold rounded">
+									<i class="bi bi-x-circle"></i> Clear
+								</button>
+							</div>
+						</div>
+					</div>
+	
+					<img src="https://placehold.co/100x100" class="card-img-top rounded">
+	
+					<!-- Card Body -->
+					<div class="card-body p-1">
+						<p class="card-text">
+	
+							<!-- File Name -->
+						<div class="input-group">
+							<input type="text" class="form-control" value="${name}">
+							<span class="input-group-text">.${extension}</span>
+						</div>
+	
+						<!-- File Size and Server -->
+						<div class="d-flex justify-content-between mt-3">
+							<div class="bg-white">
+								<p class="small mt-1">${size} MB</p>
+							</div>
+							<div class="bg-white m-0">
+								<span class="badge bg-dark border rounded px-3 py-2 text-white">Servidor</span>
+							</div>
+						</div>
+	
+						<!-- Date -->
+						<h6 class="float-end my-0 py-0">
+							<small>${time}</small>
+						</h6>
+	
+						</p>
+					</div>
+	
+				</div>
+			</div>
+
+		`);
+
+
 	});
 
 	// console.log("files", files);
 	// console.log("time", time);
+	
 }

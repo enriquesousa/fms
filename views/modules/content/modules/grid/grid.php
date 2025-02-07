@@ -2,8 +2,8 @@
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5 my-4 px-2 modules" id="grid" style="display: none;">
 
     <?php for ($i = 0; $i < 10; $i++): ?>
-        <div class="col">
 
+        <div class="col">
             <!-- Card -->
             <div class="card rounded p-3 border-0 shadow my-3">
 
@@ -55,8 +55,8 @@
                 </div>
 
             </div>
-
         </div>
+        
     <?php endfor ?>
 
 </div>
