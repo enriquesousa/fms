@@ -89,9 +89,10 @@ $("#dragFiles").on('drop', function (e) {
 var files;
 function uploadFiles(event, type, time) {
 
-	// console.log("event", event);
-	// return;
-
+	// Activar el preloader barra linea que se ve en la parte superior y un sweet alert
+	fncMatPreloader("on");
+	fncSweetAlert("loading", "Subiendo archivos...", "");
+	
 	// Captura de los archivos
 	if(type == 'btn'){
 		files = event.target.files;
@@ -314,6 +315,9 @@ function uploadFiles(event, type, time) {
 
 				/* Ejecutar función ajuste de imagen */
 				imgAdjustGrid();
+
+				fncMatPreloader("off");
+				fncSweetAlert("close", "", "");
 			}
 
 		}else{
@@ -325,9 +329,6 @@ function uploadFiles(event, type, time) {
 		
 
 	});
-
-	// console.log("files", files);
-	// console.log("time", time);
 	
 }
 
