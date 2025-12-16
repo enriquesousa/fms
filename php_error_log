@@ -5,3 +5,6 @@
 [05-Feb-2025 08:50:58 America/Tijuana] PHP Warning:  include(): Failed opening 'views/modules/content/modules/search/search.php' for inclusion (include_path='.:/usr/share/php') in /home/enrique/Sites/JuanFernandoUrrego/fms/fms/views/modules/content/content.php on line 6
 [05-Feb-2025 08:51:00 America/Tijuana] PHP Warning:  include(views/modules/content/modules/search/search.php): Failed to open stream: No such file or directory in /home/enrique/Sites/JuanFernandoUrrego/fms/fms/views/modules/content/content.php on line 6
 [05-Feb-2025 08:51:00 America/Tijuana] PHP Warning:  include(): Failed opening 'views/modules/content/modules/search/search.php' for inclusion (include_path='.:/usr/share/php') in /home/enrique/Sites/JuanFernandoUrrego/fms/fms/views/modules/content/content.php on line 6
+[16-Dec-2025 12:50:56 America/Tijuana] PHP Warning:  Attempt to read property "status" on null in C:\Users\Enrique\Herd\fms\controllers\admins.controller.php on line 30
+[16-Dec-2025 12:50:56 America/Tijuana] PHP Warning:  Attempt to read property "results" on null in C:\Users\Enrique\Herd\fms\controllers\admins.controller.php on line 39
+[16-Dec-2025 12:50:56 America/Tijuana] PHP Warning:  Attempt to read property "results" on null in C:\Users\Enrique\Herd\fms\controllers\admins.controller.php on line 42

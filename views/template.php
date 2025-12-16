@@ -38,7 +38,9 @@
     <title>FMS | File Manager System</title>
 
     <!-- Icono de la página -->
-    <link rel="icon" href="https://cdn.filestackcontent.com/1LIBQrPFRuGylthi5tUp">
+    <!-- <link rel="icon" href="https://cdn.filestackcontent.com/1LIBQrPFRuGylthi5tUp"> -->
+	<link rel="icon" href="/views/assets/img/favicon.png">	 		
+	
 
     <!-- Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,600,500,700">
